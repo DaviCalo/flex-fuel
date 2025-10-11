@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,7 +18,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.smd.flexfuel.viewmodel.MainScreenViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextRange
+import com.smd.flexfuel.ui.components.ButtonComponent
 import com.smd.flexfuel.ui.components.CalculateDialogComponents
+import com.smd.flexfuel.ui.components.SwitchComponent
 import com.smd.flexfuel.ui.utils.OptionFuel
 
 @Composable
@@ -66,30 +64,22 @@ fun MainScreen(
         )
         Row {
             Text("70%")
-            Switch(
+            SwitchComponent(
                 checked = isRatio70,
                 onCheckedChange = {
                     viewModel.onRatioChange(it)
-                },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = MaterialTheme.colorScheme.primary,
-                    checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
-                    uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,
-                )
+                }
             )
             Text("75%")
         }
-        Button(
+        ButtonComponent(
             onClick = {
                 if(alcoholInput.text.isNotBlank() || gasolineInput.text.isNotBlank())
                     viewModel.calculateResult()
 
                 openAlertDialog.value = true
             }
-        ) {
-            Text("Calcular")
-        }
+        )
     }
     when {
         openAlertDialog.value -> {
