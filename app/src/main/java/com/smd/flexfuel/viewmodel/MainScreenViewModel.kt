@@ -21,6 +21,9 @@ class MainScreenViewModel: ViewModel() {
     private val _bestFuel: MutableStateFlow<OptionFuel> = MutableStateFlow(OptionFuel.NONE)
     val bestFuel: StateFlow<OptionFuel> = _bestFuel.asStateFlow()
 
+    private val _gasStation: MutableStateFlow<String> = MutableStateFlow("")
+    val gasStation: StateFlow<String> = _gasStation.asStateFlow()
+
     fun onAlcoholValueChange(newValue: TextFieldValue) {
         _alcoholValue.update { newValue }
     }
@@ -37,12 +40,20 @@ class MainScreenViewModel: ViewModel() {
         _bestFuel.update { newValue }
     }
 
+    fun onGasStationChange(newValue: String) {
+        _gasStation.update { newValue }
+    }
+
     fun calculateResult() {
         if (_alcoholValue.value.text.isEmpty() || _gasolineValue.value.text.isEmpty())
             return
         val alcohol = _alcoholValue.value.toString().toDoubleOrNull() ?: 0.0
         val gasoline = _gasolineValue.value.toString().toDoubleOrNull() ?: 0.0
         val ratio = if (_isRatio70.value) 0.7 else 0.75
-        if (alcohol >= (gasoline * ratio)) onBestFuel(OptionFuel.ALCOHOL) else onBestFuel(OptionFuel.GASOLINE)
+        if (alcohol <= (gasoline * ratio)) {
+            onBestFuel(OptionFuel.ALCOHOL)
+        } else {
+            onBestFuel(OptionFuel.GASOLINE)
+        }
     }
 }

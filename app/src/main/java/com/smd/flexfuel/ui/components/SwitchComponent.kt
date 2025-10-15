@@ -12,9 +12,7 @@ fun SwitchComponent(
 ) {
     Switch(
         checked = checked,
-        onCheckedChange = {
-            onCheckedChange
-        },
+        onCheckedChange = onCheckedChange,
         colors = SwitchDefaults.colors(
             checkedThumbColor = MaterialTheme.colorScheme.primary,
             checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,

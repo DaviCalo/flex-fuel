@@ -6,13 +6,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun CalculateDialogComponents(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
-    dialogTitle: String,
-    dialogText: String,
+    idDialogTitle: Int,
+    idDialogText: Int,
     icon: ImageVector,
 ) {
     AlertDialog(
@@ -20,12 +21,10 @@ fun CalculateDialogComponents(
             Icon(icon, contentDescription = "Example Icon")
         },
         title = {
-            Text(text = dialogTitle)
+            Text(text = stringResource(id = idDialogTitle))
         },
         text = {
-            if(dialogText.isNotEmpty()){
-                Text(text = dialogText)
-            }
+            Text(text = stringResource(id = idDialogText))
         },
         onDismissRequest = {
             onDismissRequest()

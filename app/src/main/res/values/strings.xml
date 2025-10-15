@@ -2,4 +2,9 @@
     <string name="app_name">Flex Fuel</string>
     <string name="alcohol">Alcool</string>
     <string name="gasoline">Gasolina</string>
+    <string name="placeholder_gas_station">Posto de Combustível</string>
+    <string name="label_gas_station">Nome do Posto (Opcional)</string>
+    <string name="error_gas_station">Preencha todos os campos</string>
+    <string name="error_fields">Erro</string>
+    <string name="result">"O melhor combustível é:"</string>
 </resources>

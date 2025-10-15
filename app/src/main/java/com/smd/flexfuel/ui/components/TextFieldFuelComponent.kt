@@ -10,16 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.smd.flexfuel.ui.utils.RealVisualTransformation
 
 @Composable
-fun TextFieldComponents(
+fun TextFieldFuelComponents(
     modifier: Modifier = Modifier,
-    value: String,
-    onValueChange : (String) -> Unit,
+    value: TextFieldValue,
+    onValueChange : (TextFieldValue) -> Unit,
     idLabel: Int,
-    idPlaceHolder: Int
-) {
+){
     OutlinedTextField(
         modifier = modifier.fillMaxWidth().padding(60.dp, 0.dp),
         value = value,
@@ -29,10 +30,10 @@ fun TextFieldComponents(
         maxLines = 1,
         singleLine = true,
         label = { Text(text = stringResource(id = idLabel)) },
-        placeholder = { Text(text = stringResource(id = idPlaceHolder)) },
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
+            keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next,
-        )
+        ),
+        visualTransformation = RealVisualTransformation()
     )
 }

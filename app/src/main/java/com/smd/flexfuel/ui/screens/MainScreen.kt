@@ -17,17 +17,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import com.smd.flexfuel.ui.components.TextFieldComponents
+import com.smd.flexfuel.ui.components.TextFieldFuelComponents
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.smd.flexfuel.viewmodel.MainScreenViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.smd.flexfuel.ui.components.ButtonComponent
 import com.smd.flexfuel.ui.components.CalculateDialogComponents
 import com.smd.flexfuel.ui.components.SwitchComponent
+import com.smd.flexfuel.ui.components.TextFieldComponents
 import com.smd.flexfuel.ui.theme.FlexFuelTheme
 import com.smd.flexfuel.ui.utils.OptionFuel
 
@@ -40,14 +40,16 @@ fun MainScreen(
     val gasolineInput by viewModel.gasolineValue.collectAsState()
     val isRatio70 by viewModel.isRatio70.collectAsState()
     val bestFuel by viewModel.bestFuel.collectAsState()
+    val gasStation by viewModel.gasStation.collectAsState()
     val openAlertDialog = remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier.padding(innerPadding)
+        modifier = Modifier
+            .padding(innerPadding)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
     ) {
-        TextFieldComponents(
+        TextFieldFuelComponents(
             modifier = Modifier,
             value = alcoholInput,
             idLabel = R.string.alcohol,
@@ -60,7 +62,7 @@ fun MainScreen(
                 viewModel.onAlcoholValueChange(updatedValue)
             }
         )
-        TextFieldComponents(
+        TextFieldFuelComponents(
             modifier = Modifier,
             value = gasolineInput,
             idLabel = R.string.gasoline,
@@ -72,6 +74,15 @@ fun MainScreen(
                 )
                 viewModel.onGasolineValueChange(updatedValue)
             }
+        )
+        TextFieldComponents(
+            modifier = Modifier,
+            value = gasStation,
+            idLabel = R.string.label_gas_station ,
+            idPlaceHolder = R.string.placeholder_gas_station ,
+            onValueChange = {
+                viewModel.onGasStationChange(it)
+            },
         )
         Row (modifier = Modifier,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -101,12 +112,12 @@ fun MainScreen(
                 onConfirmation = {
                     openAlertDialog.value = false
                 },
-                dialogTitle = if(alcoholInput.text.isEmpty() || gasolineInput.text.isEmpty()) "Preencha os campos"
-                                else "O melhor combustível é:",
-                dialogText = when (bestFuel) {
-                    OptionFuel.ALCOHOL -> "Álcool"
-                    OptionFuel.GASOLINE -> "Gasolina"
-                    else -> ""
+                idDialogTitle = if(alcoholInput.text.isEmpty() || gasolineInput.text.isEmpty()) R.string.error_fields
+                                else R.string.result,
+                idDialogText = when (bestFuel) {
+                    OptionFuel.ALCOHOL -> R.string.alcohol
+                    OptionFuel.GASOLINE -> R.string.gasoline
+                    else -> R.string.error_gas_station
                 },
                 icon = Icons.Default.Info
             )
