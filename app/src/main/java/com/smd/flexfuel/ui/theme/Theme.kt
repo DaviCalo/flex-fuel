@@ -12,12 +12,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.smd.flexfuel.ui.theme.Black
 
+/*
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
 
     background = Black
+)
+ */
+
+private val DarkColorScheme = darkColorScheme(
+    primary = TealAccentDark,
+    secondary = LavenderAccentDark,
+    background = NavyBlueDark
 )
 
 private val LightColorScheme = lightColorScheme(

@@ -12,8 +12,6 @@ import androidx.compose.ui.Modifier
 import com.smd.flexfuel.ui.screens.MainScreen
 import com.smd.flexfuel.ui.theme.FlexFuelTheme
 
-import androidx.compose.ui.graphics.Color
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

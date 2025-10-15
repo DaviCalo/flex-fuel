@@ -11,3 +11,13 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Black = Color(0xFF737373)
+
+
+
+// ---  MODO ESCURO ---
+
+val NavyBlueDark = Color(0xFF0D1B2A)
+val TealAccentDark = Color(0xFF80CBC4)
+val LavenderAccentDark = Color(0xFFCE93D8)
+
+
