@@ -1,5 +1,6 @@
 package com.smd.flexfuel.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import com.smd.flexfuel.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import com.smd.flexfuel.ui.components.TextFieldComponents
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.smd.flexfuel.viewmodel.MainScreenViewModel
@@ -41,6 +43,9 @@ fun MainScreen(
     val openAlertDialog = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.padding(innerPadding)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
     ) {
         TextFieldComponents(
             modifier = Modifier,
@@ -68,7 +73,9 @@ fun MainScreen(
                 viewModel.onGasolineValueChange(updatedValue)
             }
         )
-        Row {
+        Row (modifier = Modifier,
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically) {
             Text("70%")
             SwitchComponent(
                 checked = isRatio70,
