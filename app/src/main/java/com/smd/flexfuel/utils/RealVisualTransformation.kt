@@ -1,4 +1,4 @@
-package com.smd.flexfuel.ui.utils
+package com.smd.flexfuel.utils
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TransformedText

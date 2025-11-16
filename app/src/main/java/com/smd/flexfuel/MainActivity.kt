@@ -4,11 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.smd.flexfuel.ui.screens.CreateDataScreen
+import com.smd.flexfuel.ui.screens.EditeDataScreen
 import com.smd.flexfuel.ui.screens.MainScreen
 import com.smd.flexfuel.ui.theme.FlexFuelTheme
 
@@ -18,14 +19,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FlexFuelTheme {
-                Surface (
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                    ) { innerPadding ->
-                        MainScreen(innerPadding)
+                val navController: NavHostController = rememberNavController()
+                NavHost(navController = navController, startDestination = "mainscreen") {
+                    composable("mainscreen") { MainScreen(navController) }
+                    composable("createdatascreen") { CreateDataScreen(navController) }
+                    composable("editdatascreen/{idPost}") { backStackEntry ->
+                        val idPost = backStackEntry.arguments?.getString("idPost")?.toIntOrNull()
+                        EditeDataScreen(navController, idPost)
                     }
                 }
             }

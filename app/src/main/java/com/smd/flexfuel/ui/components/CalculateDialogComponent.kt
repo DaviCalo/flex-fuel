@@ -35,7 +35,7 @@ fun CalculateDialogComponents(
                     onConfirmation()
                 }
             ) {
-                Text("Confirm")
+                Text("Confirmar")
             }
         },
     )

@@ -1,14 +1,21 @@
 package com.smd.flexfuel.viewmodel
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import com.smd.flexfuel.ui.utils.OptionFuel
+import com.smd.flexfuel.model.Post
+import com.smd.flexfuel.utils.OptionFuel
+import com.smd.flexfuel.utils.SharedPrefsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.text.NumberFormat
+import java.util.Locale
+import kotlin.String
 
-class MainScreenViewModel: ViewModel() {
+class CreateDataViewModel : ViewModel() {
     private val _gasolineValue = MutableStateFlow(TextFieldValue(""))
     val gasolineValue: StateFlow<TextFieldValue> = _gasolineValue.asStateFlow()
 
@@ -23,6 +30,12 @@ class MainScreenViewModel: ViewModel() {
 
     private val _gasStation: MutableStateFlow<String> = MutableStateFlow("")
     val gasStation: StateFlow<String> = _gasStation.asStateFlow()
+
+    var sharedPrefsManager: SharedPrefsManager? = null
+
+    fun initSharedPrefsManager(context: Context) {
+        sharedPrefsManager = SharedPrefsManager(context)
+    }
 
     fun onAlcoholValueChange(newValue: TextFieldValue) {
         _alcoholValue.update { newValue }
@@ -55,5 +68,43 @@ class MainScreenViewModel: ViewModel() {
         } else {
             onBestFuel(OptionFuel.GASOLINE)
         }
+    }
+
+    fun convertCommaStringToDouble(value: String): Double {
+        val cleanValue = value.replace(Regex("[^0-9]"), "")
+        val formattedValue = if (cleanValue.length < 3) {
+            "0," + cleanValue.padStart(2, '0')
+        } else {
+            cleanValue.substring(0, cleanValue.length - 2) +
+                    "," +
+                    cleanValue.substring(cleanValue.length - 2)
+        }
+        val format = NumberFormat.getInstance(Locale.forLanguageTag("pt-BR"))
+
+        return try {
+            format.parse(formattedValue)?.toDouble() ?: 0.0
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0.0
+        }
+    }
+
+    fun savePost() {
+        val manager = sharedPrefsManager ?: return
+        val gasolineText = _gasolineValue.value.text
+        val alcoholText = _alcoholValue.value.text
+        val gasolineDouble = convertCommaStringToDouble(gasolineText)
+        val alcoholDouble = convertCommaStringToDouble(alcoholText)
+        Log.d("asd","$gasolineDouble  $alcoholDouble")
+        manager.includePost(
+            newPost = Post(
+                id = 0,
+                name = _gasStation.value,
+                gasolineValue = gasolineDouble,
+                alcoholValue = alcoholDouble,
+                isRatio70 = _isRatio70.value,
+                location = null
+            )
+        )
     }
 }

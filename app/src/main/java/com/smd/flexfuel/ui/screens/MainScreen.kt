@@ -1,136 +1,78 @@
 package com.smd.flexfuel.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import com.smd.flexfuel.R
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import com.smd.flexfuel.ui.components.TextFieldFuelComponents
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.smd.flexfuel.viewmodel.MainScreenViewModel
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.smd.flexfuel.ui.components.ButtonComponent
-import com.smd.flexfuel.ui.components.CalculateDialogComponents
-import com.smd.flexfuel.ui.components.SwitchComponent
-import com.smd.flexfuel.ui.components.TextFieldComponents
-import com.smd.flexfuel.ui.theme.FlexFuelTheme
-import com.smd.flexfuel.ui.utils.OptionFuel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.smd.flexfuel.R
+import com.smd.flexfuel.ui.components.CardPostComponent
+import com.smd.flexfuel.viewmodel.MainViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    innerPadding: PaddingValues,
-    viewModel: MainScreenViewModel = viewModel()
+    navController: NavHostController,
+    viewModel: MainViewModel = viewModel()
 ) {
-    val alcoholInput by viewModel.alcoholValue.collectAsState()
-    val gasolineInput by viewModel.gasolineValue.collectAsState()
-    val isRatio70 by viewModel.isRatio70.collectAsState()
-    val bestFuel by viewModel.bestFuel.collectAsState()
-    val gasStation by viewModel.gasStation.collectAsState()
-    val openAlertDialog = remember { mutableStateOf(false) }
-    Column(
-        modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
-    ) {
-        TextFieldFuelComponents(
-            modifier = Modifier,
-            value = alcoholInput,
-            idLabel = R.string.alcohol,
-            onValueChange = { newValue ->
-                val newText = newValue.text.filter { it.isDigit() }
-                val updatedValue = newValue.copy(
-                    text = newText,
-                    selection = TextRange(newText.length)
-                )
-                viewModel.onAlcoholValueChange(updatedValue)
-            }
-        )
-        TextFieldFuelComponents(
-            modifier = Modifier,
-            value = gasolineInput,
-            idLabel = R.string.gasoline,
-            onValueChange = { newValue ->
-                val newText = newValue.text.filter { it.isDigit() }
-                val updatedValue = newValue.copy(
-                    text = newText,
-                    selection = TextRange(newText.length)
-                )
-                viewModel.onGasolineValueChange(updatedValue)
-            }
-        )
-        TextFieldComponents(
-            modifier = Modifier,
-            value = gasStation,
-            idLabel = R.string.label_gas_station ,
-            idPlaceHolder = R.string.placeholder_gas_station ,
-            onValueChange = {
-                viewModel.onGasStationChange(it)
-            },
-        )
-        Row (modifier = Modifier,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically) {
-            Text("70%")
-            SwitchComponent(
-                checked = isRatio70,
-                onCheckedChange = {
-                    viewModel.onRatioChange(it)
+    val context = LocalContext.current
+    viewModel.initSharedPrefsManager(context = context)
+    val postos by viewModel.listOfPost.collectAsState()
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { Text("FlexFuel") },
+                actions = {
+                    // TODO("add toggle language") @Nicole
                 }
             )
-            Text("75%")
-        }
-        ButtonComponent(
-            onClick = {
-                if(alcoholInput.text.isNotBlank() || gasolineInput.text.isNotBlank())
-                    viewModel.calculateResult()
-
-                openAlertDialog.value = true
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate("createdatascreen")
+                },
+            ) {
+                Icon(Icons.Filled.Add, "Floating action button.")
             }
-        )
-    }
-    when {
-        openAlertDialog.value -> {
-            CalculateDialogComponents(
-                onDismissRequest = { openAlertDialog.value = false },
-                onConfirmation = {
-                    openAlertDialog.value = false
-                },
-                idDialogTitle = if(alcoholInput.text.isEmpty() || gasolineInput.text.isEmpty()) R.string.error_fields
-                                else R.string.result,
-                idDialogText = when (bestFuel) {
-                    OptionFuel.ALCOHOL -> R.string.alcohol
-                    OptionFuel.GASOLINE -> R.string.gasoline
-                    else -> R.string.error_gas_station
-                },
-                icon = Icons.Default.Info
-            )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MainScreenPreview() {
-    FlexFuelTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            MainScreen(innerPadding)
+    ) { innerPadding ->
+        LazyColumn(
+            contentPadding = innerPadding,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            item {
+                Text(
+                    modifier = Modifier.padding(16.dp, 5.dp),
+                    text = stringResource(R.string.saved_post),
+                    color = MaterialTheme.colorScheme.primary)
+            }
+            items(
+                items = postos,
+                key = { posto -> posto.id },
+            ) { post ->
+                CardPostComponent(post){ navController.navigate("editdatascreen/${post.id}") }
+            }
         }
     }
 }

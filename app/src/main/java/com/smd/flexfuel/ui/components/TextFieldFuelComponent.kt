@@ -12,7 +12,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.smd.flexfuel.ui.utils.RealVisualTransformation
+import com.smd.flexfuel.utils.RealVisualTransformation
 
 @Composable
 fun TextFieldFuelComponents(
