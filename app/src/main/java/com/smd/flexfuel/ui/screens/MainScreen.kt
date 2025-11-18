@@ -27,6 +27,10 @@ import com.smd.flexfuel.R
 import com.smd.flexfuel.ui.components.CardPostComponent
 import com.smd.flexfuel.viewmodel.MainViewModel
 
+import android.content.Intent
+import android.net.Uri
+import com.smd.flexfuel.model.PostLocation
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
@@ -70,8 +74,32 @@ fun MainScreen(
             items(
                 items = postos,
                 key = { posto -> posto.id },
-            ) { post ->
-                CardPostComponent(post){ navController.navigate("editdatascreen/${post.id}") }
+            ) { posto ->
+                CardPostComponent(
+                    post = posto,
+                    onClick = { navController.navigate("editdatascreen/${posto.id}") },
+                    onMapClick = {
+                        val location = posto.location
+
+                        if (location != null) {
+                            val gmmIntentUri = Uri.parse("geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}(${Uri.encode(posto.name)})")
+
+                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                            mapIntent.setPackage("com.google.android.apps.maps")
+
+                            try {
+                                context.startActivity(mapIntent)
+                            } catch (e: Exception) {
+                                val webIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                                try {
+                                    context.startActivity(webIntent)
+                                } catch (e2: Exception) {
+                                    e2.printStackTrace()
+                                }
+                            }
+                        }
+                    }
+                )
             }
         }
     }

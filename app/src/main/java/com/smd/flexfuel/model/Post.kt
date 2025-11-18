@@ -6,5 +6,10 @@ data class Post(
     val gasolineValue: Double,
     val alcoholValue: Double,
     val isRatio70: Boolean,
-    val location: Any?
+    val location: PostLocation?
+)
+
+data class PostLocation(
+    val latitude: Double,
+    val longitude: Double
 )

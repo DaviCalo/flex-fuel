@@ -21,7 +21,8 @@ class SharedPrefsManager(context: Context) {
     fun includePost(newPost: Post) {
         val currentList = getPostList().toMutableList()
 
-        newPost.id = currentList.size + 1
+        val maxId = currentList.maxOfOrNull { it.id } ?: 0
+        newPost.id = maxId + 1
 
         currentList.add(newPost)
 
@@ -41,4 +42,46 @@ class SharedPrefsManager(context: Context) {
             ArrayList(list)
         }
     }
+
+    fun getPost(id: Int): Post? {
+        val posts = getPostList()
+        return posts.find { it.id == id }
+    }
+
+    fun updatePost(updatedPost: Post) {
+        val currentList = getPostList().toMutableList()
+        val index = currentList.indexOfFirst { it.id == updatedPost.id }
+
+        if (index != -1) {
+            currentList[index] = updatedPost
+            val updatedJson = gson.toJson(currentList)
+            prefs.edit { putString(KEY_POSTS, updatedJson) }
+        }
+    }
+
+    fun deletePost(id: Int) {
+        val currentList = getPostList().toMutableList()
+        val iterator = currentList.iterator()
+
+        while (iterator.hasNext()) {
+            if (iterator.next().id == id) {
+                iterator.remove()
+                break
+            }
+        }
+
+        val updatedJson = gson.toJson(currentList)
+        prefs.edit { putString(KEY_POSTS, updatedJson) }
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

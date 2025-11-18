@@ -41,6 +41,10 @@ import com.smd.flexfuel.ui.components.TextFieldFuelComponents
 import com.smd.flexfuel.utils.OptionFuel
 import com.smd.flexfuel.viewmodel.EditeDataViewModel
 
+
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.MaterialTheme
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditeDataScreen(
@@ -50,6 +54,13 @@ fun EditeDataScreen(
 ) {
     val context = LocalContext.current
     viewModel.initSharedPrefsManager(context = context)
+
+    androidx.compose.runtime.LaunchedEffect(idPost) {
+        if (idPost != null) {
+            viewModel.loadPostData(idPost)
+        }
+    }
+
     val alcoholInput by viewModel.alcoholValue.collectAsState()
     val gasolineInput by viewModel.gasolineValue.collectAsState()
     val isRatio70 by viewModel.isRatio70.collectAsState()
@@ -78,13 +89,16 @@ fun EditeDataScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            // TODO DELETAR O POSTO AQUI
-                            navController.popBackStack()
+                            if (idPost != null) {
+                                viewModel.deletePost(idPost)
+                                navController.popBackStack()
+                            }
                         }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = stringResource(R.string.delete)
+                            contentDescription = stringResource(R.string.delete),
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -100,7 +114,9 @@ fun EditeDataScreen(
                             .padding(16.dp),
                         onClick = {
                             if (alcoholInput.text.isNotBlank() || gasolineInput.text.isNotBlank() || gasStation.isNotBlank()) {
-                                // TODO: CHAME A FUNCAO PARA ATUALIZAR AQUI
+                                if (idPost != null) {
+                                    viewModel.updatePost(idPost) // Chama a função de editar/salvar
+                                }
                                 navController.popBackStack()
                             }
                         }

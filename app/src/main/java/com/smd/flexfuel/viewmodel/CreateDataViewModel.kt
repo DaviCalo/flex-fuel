@@ -15,6 +15,8 @@ import java.text.NumberFormat
 import java.util.Locale
 import kotlin.String
 
+import com.smd.flexfuel.model.PostLocation
+
 class CreateDataViewModel : ViewModel() {
     private val _gasolineValue = MutableStateFlow(TextFieldValue(""))
     val gasolineValue: StateFlow<TextFieldValue> = _gasolineValue.asStateFlow()
@@ -32,6 +34,8 @@ class CreateDataViewModel : ViewModel() {
     val gasStation: StateFlow<String> = _gasStation.asStateFlow()
 
     var sharedPrefsManager: SharedPrefsManager? = null
+
+    private var currentLocation: PostLocation? = null
 
     fun initSharedPrefsManager(context: Context) {
         sharedPrefsManager = SharedPrefsManager(context)
@@ -57,12 +61,32 @@ class CreateDataViewModel : ViewModel() {
         _gasStation.update { newValue }
     }
 
+    /*
     fun calculateResult() {
         if (_alcoholValue.value.text.isEmpty() || _gasolineValue.value.text.isEmpty())
             return
         val alcohol = _alcoholValue.value.toString().toDoubleOrNull() ?: 0.0
         val gasoline = _gasolineValue.value.toString().toDoubleOrNull() ?: 0.0
         val ratio = if (_isRatio70.value) 0.7 else 0.75
+        if (alcohol <= (gasoline * ratio)) {
+            onBestFuel(OptionFuel.ALCOHOL)
+        } else {
+            onBestFuel(OptionFuel.GASOLINE)
+        }
+    }*/
+
+    fun calculateResult() {
+        val alcoholText = _alcoholValue.value.text
+        val gasolineText = _gasolineValue.value.text
+
+        if (alcoholText.isEmpty() || gasolineText.isEmpty())
+            return
+
+        val alcohol = convertCommaStringToDouble(alcoholText)
+        val gasoline = convertCommaStringToDouble(gasolineText)
+
+        val ratio = if (_isRatio70.value) 0.7 else 0.75
+
         if (alcohol <= (gasoline * ratio)) {
             onBestFuel(OptionFuel.ALCOHOL)
         } else {
@@ -89,6 +113,12 @@ class CreateDataViewModel : ViewModel() {
         }
     }
 
+    fun updateLocation(lat: Double, long: Double) {
+        currentLocation = PostLocation(lat, long)
+        Log.d("CreateDataViewModel", "Location updated: $lat, $long")
+    }
+
+
     fun savePost() {
         val manager = sharedPrefsManager ?: return
         val gasolineText = _gasolineValue.value.text
@@ -96,6 +126,7 @@ class CreateDataViewModel : ViewModel() {
         val gasolineDouble = convertCommaStringToDouble(gasolineText)
         val alcoholDouble = convertCommaStringToDouble(alcoholText)
         Log.d("asd","$gasolineDouble  $alcoholDouble")
+
         manager.includePost(
             newPost = Post(
                 id = 0,
@@ -103,7 +134,8 @@ class CreateDataViewModel : ViewModel() {
                 gasolineValue = gasolineDouble,
                 alcoholValue = alcoholDouble,
                 isRatio70 = _isRatio70.value,
-                location = null
+
+                location = currentLocation
             )
         )
     }
