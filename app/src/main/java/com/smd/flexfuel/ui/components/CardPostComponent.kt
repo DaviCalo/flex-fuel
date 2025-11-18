@@ -20,6 +20,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.ui.res.stringResource
+import com.smd.flexfuel.R
 
 @Composable
 fun CardPostComponent(
@@ -53,8 +55,8 @@ fun CardPostComponent(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(text = post.name, style = MaterialTheme.typography.titleMedium)
-                Text(text = "Álcool: R$ ${post.alcoholValue}")
-                Text(text = "Gasolina: R$ ${post.gasolineValue}")
+                Text(text = (stringResource(R.string.alcohol))+ ": R$ ${post.alcoholValue}")
+                Text(text = (stringResource(R.string.gasoline))+ ": R$ ${post.gasolineValue}")
             }
 
             if (post.location != null) {

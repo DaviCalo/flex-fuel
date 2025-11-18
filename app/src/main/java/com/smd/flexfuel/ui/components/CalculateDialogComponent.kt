@@ -7,6 +7,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import com.smd.flexfuel.R
 
 @Composable
 fun CalculateDialogComponents(
@@ -35,7 +36,7 @@ fun CalculateDialogComponents(
                     onConfirmation()
                 }
             ) {
-                Text("Confirmar")
+                Text(text = (stringResource(R.string.confirm)))
             }
         },
     )

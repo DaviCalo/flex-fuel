@@ -6,7 +6,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.smd.flexfuel.R
 
 @Composable
 fun ButtonComponent(
@@ -17,6 +19,6 @@ fun ButtonComponent(
         modifier = modifier.fillMaxWidth().padding(60.dp, 0.dp),
         onClick = onClick
     ) {
-        Text("Calcular")
+        Text(text = stringResource(R.string.buttonMath))
     }
 }

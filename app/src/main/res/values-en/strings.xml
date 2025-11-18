@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flex Fuel</string>
+    <string name="alcohol">Alcohol</string>
+    <string name="gasoline">Gasoline</string>
+    <string name="error_gas_station">Fill in all the fields</string>
+    <string name="error_fields">Error</string>
+    <string name="result">The cheapest choice is:</string>
+    <string name="saved_post">Saved Gas Stations</string>
+    <string name="save_post">Save</string>
+    <string name="back">Back</string>
+    <string name="placeholder_gas_station">Gas Station</string>
+    <string name="label_gas_station">Gas Station\'s name (Optional)</string>
+    <string name="edit_post">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="add_new_post">Add new Gas Station</string>
+    <string name="buttonMath">Calculate</string>
+    <string name="confirm">Confirm</string>
+</resources>

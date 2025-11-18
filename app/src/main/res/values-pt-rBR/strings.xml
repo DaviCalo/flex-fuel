@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flex Fuel</string>
+    <string name="save_post">Salvar Posto</string>
+    <string name="back">Voltar</string>
+    <string name="add_new_post">Adicionar Novo Posto</string>
+    <string name="alcohol">Álcool</string>
+    <string name="delete">Deletar</string>
+    <string name="edit_post">Editar Posto</string>
+    <string name="error_fields">Erro</string>
+    <string name="gasoline">Gasolina</string>
+    <string name="label_gas_station">Nome do Posto (Opcional)</string>
+    <string name="result">O melhor combustível é:</string>
+    <string name="placeholder_gas_station">Posto de Combustível</string>
+    <string name="saved_post">Postos Salvos</string>
+    <string name="error_gas_station">Preencha todos os campos</string>
+    <string name="buttonMath">Calcular</string>
+    <string name="confirm">Confirmar</string>
+</resources>
