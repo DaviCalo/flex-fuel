@@ -1,10 +1,10 @@
 package com.smd.flexfuel.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.smd.flexfuel.model.Post
+import com.smd.flexfuel.model.PostLocation
 import com.smd.flexfuel.utils.OptionFuel
 import com.smd.flexfuel.utils.SharedPrefsManager
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +29,9 @@ class EditeDataViewModel: ViewModel() {
 
     private val _gasStation: MutableStateFlow<String> = MutableStateFlow("")
     val gasStation: StateFlow<String> = _gasStation.asStateFlow()
+
+    private val _locateStation: MutableStateFlow<PostLocation> = MutableStateFlow( PostLocation(0.0, 0.0))
+    val locateStation: StateFlow<PostLocation> = _locateStation.asStateFlow()
 
     var sharedPrefsManager: SharedPrefsManager? = null
 
@@ -55,20 +58,6 @@ class EditeDataViewModel: ViewModel() {
     fun onGasStationChange(newValue: String) {
         _gasStation.update { newValue }
     }
-
-    /*
-    fun calculateResult() {
-        if (_alcoholValue.value.text.isEmpty() || _gasolineValue.value.text.isEmpty())
-            return
-        val alcohol = _alcoholValue.value.toString().toDoubleOrNull() ?: 0.0
-        val gasoline = _gasolineValue.value.toString().toDoubleOrNull() ?: 0.0
-        val ratio = if (_isRatio70.value) 0.7 else 0.75
-        if (alcohol <= (gasoline * ratio)) {
-            onBestFuel(OptionFuel.ALCOHOL)
-        } else {
-            onBestFuel(OptionFuel.GASOLINE)
-        }
-    }*/
 
     fun calculateResult() {
         val alcoholText = _alcoholValue.value.text
@@ -108,25 +97,13 @@ class EditeDataViewModel: ViewModel() {
         }
     }
 
-    /*
-    fun editedPost() {
-        val manager = sharedPrefsManager ?: return
-        val gasolineText = _gasolineValue.value.text
-        val alcoholText = _alcoholValue.value.text
-        val gasolineDouble = convertCommaStringToDouble(gasolineText)
-        val alcoholDouble = convertCommaStringToDouble(alcoholText)
-        // TODO: CHAME A FUNCAO PARA EDITAR AQUI
-    }
-    */
-
-
     fun updatePost(idPost: Int) {
         val manager = sharedPrefsManager ?: return
         val gasolineText = _gasolineValue.value.text
         val alcoholText = _alcoholValue.value.text
+        val location = _locateStation.value
         val gasolineDouble = convertCommaStringToDouble(gasolineText)
         val alcoholDouble = convertCommaStringToDouble(alcoholText)
-
 
         manager.updatePost(
             Post(
@@ -135,7 +112,7 @@ class EditeDataViewModel: ViewModel() {
                 gasolineValue = gasolineDouble,
                 alcoholValue = alcoholDouble,
                 isRatio70 = _isRatio70.value,
-                location = null // Manteremos null até a próxima task
+                location = location
             )
         )
     }
@@ -147,7 +124,6 @@ class EditeDataViewModel: ViewModel() {
         val manager = sharedPrefsManager ?: return
         val post = manager.getPost(idPost) ?: return
 
-        // Converte Double (ex: 5.59) para String limpa (ex: "559") para o visual transformation
         val gasString = String.format(Locale("pt", "BR"), "%.2f", post.gasolineValue).replace(Regex("[^0-9]"), "")
         val alcString = String.format(Locale("pt", "BR"), "%.2f", post.alcoholValue).replace(Regex("[^0-9]"), "")
 
@@ -155,8 +131,9 @@ class EditeDataViewModel: ViewModel() {
         _alcoholValue.update { TextFieldValue(text = alcString, selection = androidx.compose.ui.text.TextRange(alcString.length)) }
         _gasStation.update { post.name }
         _isRatio70.update { post.isRatio70 }
+        _locateStation.update { post.location ?: PostLocation(0.0, 0.0) }
 
-        calculateResult() // Recalcula qual é o melhor combustível com os dados carregados
+        calculateResult()
     }
 
     fun deletePost(idPost: Int) {

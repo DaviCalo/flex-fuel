@@ -1,5 +1,7 @@
 package com.smd.flexfuel.ui.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,9 +42,7 @@ import com.smd.flexfuel.ui.components.TextFieldComponents
 import com.smd.flexfuel.ui.components.TextFieldFuelComponents
 import com.smd.flexfuel.utils.OptionFuel
 import com.smd.flexfuel.viewmodel.EditeDataViewModel
-
-
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.MaterialTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,6 +66,8 @@ fun EditeDataScreen(
     val isRatio70 by viewModel.isRatio70.collectAsState()
     val bestFuel by viewModel.bestFuel.collectAsState()
     val gasStation by viewModel.gasStation.collectAsState()
+    val locationStation by viewModel.locateStation.collectAsState()
+
     val openAlertDialog = remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier,
@@ -87,6 +89,31 @@ fun EditeDataScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = {
+                        val location = locationStation
+
+                        val gmmIntentUri = Uri.parse("geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}(${Uri.encode(gasStation)})")
+
+                        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                        mapIntent.setPackage("com.google.android.apps.maps")
+
+                        try {
+                            context.startActivity(mapIntent)
+                        } catch (e: Exception) {
+                            val webIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                            try {
+                                context.startActivity(webIntent)
+                            } catch (e2: Exception) {
+                                e2.printStackTrace()
+                            }
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Place,
+                            contentDescription = stringResource(R.string.see_in_map),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                     IconButton(
                         onClick = {
                             if (idPost != null) {
@@ -115,7 +142,7 @@ fun EditeDataScreen(
                         onClick = {
                             if (alcoholInput.text.isNotBlank() || gasolineInput.text.isNotBlank() || gasStation.isNotBlank()) {
                                 if (idPost != null) {
-                                    viewModel.updatePost(idPost) // Chama a função de editar/salvar
+                                    viewModel.updatePost(idPost)
                                 }
                                 navController.popBackStack()
                             }

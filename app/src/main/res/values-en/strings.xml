@@ -10,10 +10,12 @@
     <string name="save_post">Save</string>
     <string name="back">Back</string>
     <string name="placeholder_gas_station">Gas Station</string>
-    <string name="label_gas_station">Gas Station\'s name (Optional)</string>
+    <string name="label_gas_station">Gas Station\'s Name</string>
     <string name="edit_post">Edit</string>
     <string name="delete">Delete</string>
-    <string name="add_new_post">Add new Gas Station</string>
+    <string name="add_new_post">Add New Gas Station</string>
     <string name="buttonMath">Calculate</string>
     <string name="confirm">Confirm</string>
+    <string name="see_in_map">See in Map</string>
+    <string name="not_have_post">You don\'t have any gas stations saved</string>
 </resources>

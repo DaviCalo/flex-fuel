@@ -1,5 +1,6 @@
 package com.smd.flexfuel.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.ui.res.stringResource
 import com.smd.flexfuel.R
+import java.util.Locale
 
 @Composable
 fun CardPostComponent(
@@ -55,20 +57,26 @@ fun CardPostComponent(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(text = post.name, style = MaterialTheme.typography.titleMedium)
-                Text(text = (stringResource(R.string.alcohol))+ ": R$ ${post.alcoholValue}")
-                Text(text = (stringResource(R.string.gasoline))+ ": R$ ${post.gasolineValue}")
+                Text(text = (stringResource(R.string.alcohol))+ ": R$ ${post.alcoholValue.forFormaterBr()}")
+                Text(text = (stringResource(R.string.gasoline))+ ": R$ ${post.gasolineValue.forFormaterBr()}")
             }
 
             if (post.location != null) {
                 IconButton(onClick = onMapClick) {
                     Icon(
                         imageVector = Icons.Default.Place,
-                        contentDescription = "Ver no Mapa",
+                        contentDescription = stringResource(R.string.see_in_map),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
+            } else {
+                Log.d("asd", "CardPostComponent: ${post.location}")
             }
         }
     }
 
+}
+
+fun Double.forFormaterBr(): String {
+    return "%.2f".format(Locale("pt", "BR"), this)
 }

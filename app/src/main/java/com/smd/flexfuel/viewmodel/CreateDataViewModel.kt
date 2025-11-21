@@ -35,7 +35,8 @@ class CreateDataViewModel : ViewModel() {
 
     var sharedPrefsManager: SharedPrefsManager? = null
 
-    private var currentLocation: PostLocation? = null
+    private val _currentLocation: MutableStateFlow<PostLocation> = MutableStateFlow(PostLocation(0.0, 0.0))
+    val currentLocation: StateFlow<PostLocation> = _currentLocation.asStateFlow()
 
     fun initSharedPrefsManager(context: Context) {
         sharedPrefsManager = SharedPrefsManager(context)
@@ -60,20 +61,6 @@ class CreateDataViewModel : ViewModel() {
     fun onGasStationChange(newValue: String) {
         _gasStation.update { newValue }
     }
-
-    /*
-    fun calculateResult() {
-        if (_alcoholValue.value.text.isEmpty() || _gasolineValue.value.text.isEmpty())
-            return
-        val alcohol = _alcoholValue.value.toString().toDoubleOrNull() ?: 0.0
-        val gasoline = _gasolineValue.value.toString().toDoubleOrNull() ?: 0.0
-        val ratio = if (_isRatio70.value) 0.7 else 0.75
-        if (alcohol <= (gasoline * ratio)) {
-            onBestFuel(OptionFuel.ALCOHOL)
-        } else {
-            onBestFuel(OptionFuel.GASOLINE)
-        }
-    }*/
 
     fun calculateResult() {
         val alcoholText = _alcoholValue.value.text
@@ -114,7 +101,7 @@ class CreateDataViewModel : ViewModel() {
     }
 
     fun updateLocation(lat: Double, long: Double) {
-        currentLocation = PostLocation(lat, long)
+        _currentLocation.update {  PostLocation(lat, long) }
         Log.d("CreateDataViewModel", "Location updated: $lat, $long")
     }
 
@@ -125,7 +112,7 @@ class CreateDataViewModel : ViewModel() {
         val alcoholText = _alcoholValue.value.text
         val gasolineDouble = convertCommaStringToDouble(gasolineText)
         val alcoholDouble = convertCommaStringToDouble(alcoholText)
-        Log.d("asd","$gasolineDouble  $alcoholDouble")
+        Log.d("asd","location: $currentLocation")
 
         manager.includePost(
             newPost = Post(
@@ -134,8 +121,7 @@ class CreateDataViewModel : ViewModel() {
                 gasolineValue = gasolineDouble,
                 alcoholValue = alcoholDouble,
                 isRatio70 = _isRatio70.value,
-
-                location = currentLocation
+                location = _currentLocation.value
             )
         )
     }

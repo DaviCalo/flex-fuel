@@ -14,10 +14,6 @@ class SharedPrefsManager(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun listExists(): Boolean {
-        return prefs.contains(KEY_POSTS)
-    }
-
     fun includePost(newPost: Post) {
         val currentList = getPostList().toMutableList()
 
@@ -73,15 +69,4 @@ class SharedPrefsManager(context: Context) {
         val updatedJson = gson.toJson(currentList)
         prefs.edit { putString(KEY_POSTS, updatedJson) }
     }
-
-
-
-
-
-
-
-
-
-
-
 }

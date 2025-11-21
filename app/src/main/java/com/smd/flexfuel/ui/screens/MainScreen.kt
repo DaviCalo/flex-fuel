@@ -29,7 +29,8 @@ import com.smd.flexfuel.viewmodel.MainViewModel
 
 import android.content.Intent
 import android.net.Uri
-import com.smd.flexfuel.model.PostLocation
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +71,15 @@ fun MainScreen(
                     modifier = Modifier.padding(16.dp, 5.dp),
                     text = stringResource(R.string.saved_post),
                     color = MaterialTheme.colorScheme.primary)
+            }
+            item{
+                if(postos.isEmpty()){
+                    Text(
+                        text = stringResource(R.string.not_have_post), textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp, 5.dp),
+                        color = Color.Gray
+                    )
+                }
             }
             items(
                 items = postos,

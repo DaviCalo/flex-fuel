@@ -28,14 +28,126 @@ O aplicativo conta com um **tema claro** e um **tema escuro totalmente personali
 
 ---
 
-## 🚀 Como Usar
+## Relatório de Implementação - FlexFuel
 
-1.  Abra o aplicativo.
-2.  No campo "**Álcool (preço por litro)**", insira o valor do álcool.
-3.  No campo "**Gasolina (preço por litro)**", insira o valor da gasolina.
-4.  Use o seletor para escolher entre a proporção de **70%** ou **75%**.
-5.  Clique no botão "**Calcular**".
-6.  Um diálogo aparecerá na tela informando qual dos dois combustíveis é a opção mais vantajosa.
+Abaixo descrevo como cada requisito da avaliação foi atendido tecnicamente no código fonte do projeto
+
+---
+
+### 1. Salvar e Restaurar o Estado do Switch (0,5 ponto)
+**Requisito:** O aplicativo deve ser capaz de salvar o estado do switch (Álcool ou Gasolina/Proporção) e restaurá-lo.
+
+**Implementação:**
+O estado é gerenciado de forma reativa no `ViewModel` e persistido dentro do objeto `Post` ao salvar. Na tela de criação, o switch reflete o valor do `StateFlow`.
+
+* **Arquivo:** [CreateDataViewModel.kt](https://github.com/DaviCalo/flex-fuel/blob/main/app/src/main/java/com/smd/flexfuel/viewmodel/CreateDataViewModel.kt)
+    ```kotlin
+    // Gerenciamento de estado reativo
+    private val _isRatio70 = MutableStateFlow(false)
+    val isRatio70: StateFlow<Boolean> = _isRatio70.asStateFlow()
+
+    fun onRatioChange(newRatio: Boolean) {
+        _isRatio70.update { newRatio }
+    }
+    ```
+
+---
+
+### 2. CRUD de Valores de Combustível (2,5 pontos)
+**Requisito:** Salvar, editar e excluir valores usando `SharedPreferences` e JSON.
+
+**Implementação:**
+Foi criada a classe `SharedPrefsManager` que utiliza a biblioteca **Gson** para serializar a lista de objetos `Post` em uma String JSON, permitindo o armazenamento complexo no SharedPreferences.
+
+* **Arquivo:** [SharedPrefsManager.kt](https://github.com/DaviCalo/flex-fuel/blob/main/app/src/main/java/com/smd/flexfuel/utils/SharedPrefsManager.kt)
+    ```kotlin
+    // Serialização e Persistência (Create/Update)
+    fun includePost(newPost: Post) {
+        val currentList = getPostList().toMutableList()
+        currentList.add(newPost)
+        val updatedJson = gson.toJson(currentList)
+        prefs.edit { putString(KEY_POSTS, updatedJson) }
+    }
+
+    // Leitura e Deserialização (Read)
+    fun getPostList(): ArrayList<Post> {
+        val savedJson = prefs.getString(KEY_POSTS, null)
+        // ...Converte JSON String de volta para List<Post>...
+        val list: List<Post> = gson.fromJson(savedJson, type)
+        return ArrayList(list)
+    }
+
+    // Exclusão (Delete)
+    fun deletePost(id: Int) {
+        // Remove item da lista e salva o JSON atualizado
+        val updatedJson = gson.toJson(currentList)
+        prefs.edit { putString(KEY_POSTS, updatedJson) }
+    }
+    ```
+
+---
+
+### 3. Exibição de Lista de Postos (3 pontos)
+**Requisito:** Exibir lista com nome e valores, permitindo seleção para ver detalhes.
+
+**Implementação:**
+Utilização do componente `LazyColumn` do Jetpack Compose para renderização eficiente da lista. O item da lista é representado pelo `CardPostComponent`.
+
+* **Arquivo:** [MainScreen.kt](https://github.com/DaviCalo/flex-fuel/blob/main/app/src/main/java/com/smd/flexfuel/ui/screens/MainScreen.kt)
+    ```kotlin
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        items(items = postos, key = { it.id }) { posto ->
+            CardPostComponent(
+                post = posto,
+                // Navegação passando o ID do posto para edição/detalhes
+                onClick = { navController.navigate("editdatascreen/${posto.id}") },
+                // Callback para o clique no mapa
+                onMapClick = { /* Lógica do mapa */ }
+            )
+        }
+    }
+    ```
+
+---
+
+### 4. Acesso à Localização e Mapa (2 pontos)
+**Requisito:** Permissão de localização, salvar coordenadas e exibir no mapa via Intent.
+
+**Implementação:**
+O app solicita permissões (`ACCESS_FINE_LOCATION`) em tempo de execução. Se concedido, usa `FusedLocationProviderClient` para capturar a posição atual. Para visualização, usa uma **Implicit Intent** com o esquema `geo:`.
+
+* **Captura:** [CreateDataScreen.kt](https://github.com/DaviCalo/flex-fuel/blob/main/app/src/main/java/com/smd/flexfuel/ui/screens/CreateDataScreen.kt)
+    ```kotlin
+    // Solicitação de permissão e captura
+    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+        if (location != null) {
+            viewModel.updateLocation(location.latitude, location.longitude)
+        }
+    }
+    ```
+
+* **Exibição:** [MainScreen.kt](https://github.com/DaviCalo/flex-fuel/blob/main/app/src/main/java/com/smd/flexfuel/ui/screens/MainScreen.kt)
+    ```kotlin
+    // Intent para abrir aplicativo de mapa externo
+    val gmmIntentUri = Uri.parse("geo:${lat},${long}?q=${lat},${long}(${Uri.encode(name)})")
+    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+    mapIntent.setPackage("com.google.android.apps.maps")
+    context.startActivity(mapIntent)
+    ```
+
+---
+
+### 5. Suporte a Internacionalização (2 pontos)
+**Requisito:** Suporte a Português e Inglês.
+
+**Implementação:**
+O código não utiliza strings literais (hardcoded). Todos os textos de interface são chamados via `stringResource(R.string.id)`, permitindo que o Android selecione automaticamente o arquivo `strings.xml` correto (pasta `values` ou `values-pt`) baseado na configuração do dispositivo.
+
+* **Arquivos:** [values-pt-rBR](https://github.com/DaviCalo/flex-fuel/tree/main/app/src/main/res/values-pt-rBR), [values-en](https://github.com/DaviCalo/flex-fuel/blob/main/app/src/main/res/values-en/strings.xml)
+    ```
 
 ---
 

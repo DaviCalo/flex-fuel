@@ -2,6 +2,7 @@ package com.smd.flexfuel.ui.screens
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
@@ -63,9 +64,7 @@ fun CreateDataScreen(
     val gasStation by viewModel.gasStation.collectAsState()
     val openAlertDialog = remember { mutableStateOf(false) }
 
-
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -81,9 +80,10 @@ fun CreateDataScreen(
             } catch (e: SecurityException) {
                 e.printStackTrace()
             }
+        } else {
+            Log.e("Location", "Se")
         }
     }
-
     LaunchedEffect(Unit) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
