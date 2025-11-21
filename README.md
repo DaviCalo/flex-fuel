@@ -8,12 +8,11 @@ Este projeto foi desenvolvido como parte da atividade acadêmica **AT02 - Álcoo
 
 ## 📱 Telas (Screenshots)
 
-O aplicativo conta com um **tema claro** e um **tema escuro totalmente personalizado**, que se adapta às configurações do sistema operacional.
+O aplicativo conta com duas telas principais. Tela Inicial, Tela de Adicionar Posto, Tela de Editar Posto.
 
-| Modo Claro (Padrão) | Modo Escuro (Customizado) |
-|:-------------------:|:-------------------------:|
-| ![claro](https://github.com/user-attachments/assets/cb7a13b3-2b7c-41a0-b58b-d6450befa5a0) | ![escuro](https://github.com/user-attachments/assets/6cde4c79-b917-4906-bce2-9e9a1464b977) |
-| *Tema padrão do Material 3.* | *Tema customizado.* |
+| Tela Inicial | Tela de Adicionar Posto | Tela de Editar Posto |
+|:-------------------:|:-------------------------:|:-------------------------:|
+| <img width="720" height="1600" alt="Screenshot_20251120_223602" src="https://github.com/user-attachments/assets/f5d3b302-349b-4a80-8a6f-c72efbd80d8f" /> | <img width="720" height="1600" alt="Screenshot_20251120_223623" src="https://github.com/user-attachments/assets/a5101bf1-8d4c-4ecd-bef3-0097f6633ccd" /> | <img width="720" height="1600" alt="Screenshot_20251120_223647" src="https://github.com/user-attachments/assets/18a69aa3-dd14-4a12-b40d-3fbbf458ad5d" /> |
 
 ---
 
@@ -147,7 +146,6 @@ O app solicita permissões (`ACCESS_FINE_LOCATION`) em tempo de execução. Se c
 O código não utiliza strings literais (hardcoded). Todos os textos de interface são chamados via `stringResource(R.string.id)`, permitindo que o Android selecione automaticamente o arquivo `strings.xml` correto (pasta `values` ou `values-pt`) baseado na configuração do dispositivo.
 
 * **Arquivos:** [values-pt-rBR](https://github.com/DaviCalo/flex-fuel/tree/main/app/src/main/res/values-pt-rBR), [values-en](https://github.com/DaviCalo/flex-fuel/blob/main/app/src/main/res/values-en/strings.xml)
-    ```
 
 ---
 
