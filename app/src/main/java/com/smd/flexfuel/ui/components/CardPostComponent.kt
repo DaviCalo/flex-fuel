@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import com.smd.flexfuel.R
 import java.util.Locale
 
@@ -40,6 +41,7 @@ fun CardPostComponent(
                 color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(8.dp)
             )
+            .semantics(mergeDescendants = true) { }
             .clickable{ onClick() }
             .padding(16.dp)
         ,

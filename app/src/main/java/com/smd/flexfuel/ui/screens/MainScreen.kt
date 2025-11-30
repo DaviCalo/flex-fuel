@@ -77,7 +77,7 @@ fun MainScreen(
                     Text(
                         text = stringResource(R.string.not_have_post), textAlign = TextAlign.Center,
                         modifier = Modifier.padding(16.dp, 5.dp),
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }

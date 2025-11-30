@@ -10,7 +10,10 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val Black = Color(0xFF737373)
+// CORREÇÃO: Alterado de 0xFF737373 (Cinza) para 0xFF000000 (Preto Real)
+// Isso garante a taxa de contraste > 4.5:1 exigida em fundos claros.
+val Black = Color(0xFF000000)
+val White = Color(0xFFFFFFFF)
 
 
 

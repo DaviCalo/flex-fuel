@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -22,10 +24,10 @@ fun TextFieldComponents(
 ) {
     OutlinedTextField(
         modifier = modifier.fillMaxWidth().padding(60.dp, 0.dp),
+        // REMOVIDO: .semantics { contentDescription = ... }
+        // Deixe o sistema nativo lidar com campos de texto simples.
         value = value,
-        onValueChange = {
-            onValueChange(it)
-        },
+        onValueChange = { onValueChange(it) },
         maxLines = 1,
         singleLine = true,
         label = { Text(text = stringResource(id = idLabel)) },

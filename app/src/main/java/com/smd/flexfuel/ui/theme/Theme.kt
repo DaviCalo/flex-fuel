@@ -19,23 +19,23 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40,
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    // CORREÇÃO: Forçando cores de fundo e texto para garantir contraste
+    background = White,
+    surface = White,
+    onPrimary = White,
+    onSecondary = White,
+    onTertiary = White,
+    onBackground = Black, // Garante texto preto sobre fundo branco
+    onSurface = Black
 )
 
 @Composable
 fun FlexFuelTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    // CORREÇÃO: Alterado para 'false' para evitar cores do sistema de baixo contraste
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

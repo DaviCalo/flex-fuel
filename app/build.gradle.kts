@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.smd.flexfuel"
-        minSdk = 31
+        minSdk = 29
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
